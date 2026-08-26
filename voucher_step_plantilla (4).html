@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Voucher Step One Group - Plantilla</title>
+<style>
+  :root {
+    --red: #D0021B;
+    --dark: #222222;
+    --grey: #444444;
+    --grey-bg: #eeeeee;
+    --field-bg: #FFF7E0;
+    --field-border: #cccccc;
+    --field-ok: #DFF3E3;
+    --field-err: #FBE0E0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    background: #F2F2F2;
+    margin: 0;
+    padding: 24px;
+    color: var(--dark);
+  }
+  .sheet {
+    max-width: 860px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 28px 32px 36px;
+  }
+  .no-print { max-width: 860px; margin: 0 auto 14px; display:flex; justify-content:flex-end; gap:8px; }
+  .btn {
+    background: var(--red); color: #fff; border: none; padding: 10px 18px;
+    font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 3px;
+  }
+  .btn:hover { background:#a80115; }
+  .header {
+    display: flex; align-items: center; border: 1px solid #cccccc;
+    padding: 10px 18px; margin-bottom: 22px;
+  }
+  .header img { height: 42px; margin-right: 26px; }
+  .header .voucher-title { font-size: 20px; font-weight: bold; display:flex; align-items:center; gap:8px; }
+  .header input.voucher-num { width: 110px; }
+  .row { display: flex; gap: 24px; margin-bottom: 14px; flex-wrap: wrap; }
+  .col { flex: 1; min-width: 180px; }
+  .col.small { flex: 0 0 90px; min-width: 90px; }
+  label {
+    display: block; font-size: 11px; color: var(--grey); margin-bottom: 4px;
+  }
+  input[type=text], textarea {
+    width: 100%; border: 1px solid var(--field-border); background: var(--field-bg);
+    padding: 6px 8px; font-size: 13px; font-family: inherit; color: var(--dark);
+    border-radius: 2px;
+  }
+  input.readonly, textarea.readonly { background: #f4f4f4; color: #555; }
+  input.code-input { text-transform: uppercase; font-weight: bold; }
+  textarea { resize: vertical; }
+  .hint { font-size: 10.5px; margin-top: 3px; min-height: 13px; }
+  .hint.ok { color: #1a7a34; }
+  .hint.err { color: var(--red); }
+  hr { border: none; border-top: 1px solid #cccccc; margin: 20px 0; }
+  h3 { font-size: 14px; margin: 0 0 10px; }
+  .terms {
+    background: var(--grey-bg); padding: 14px 16px; font-size: 11.5px;
+    color: var(--grey); line-height: 1.5; margin-top: 10px;
+  }
+  .terms p { margin: 0 0 8px; }
+  .terms p:last-child { margin-bottom: 0; }
+  .footer-note {
+    margin-top: 18px; font-size: 10.5px; color: #999999; font-style: italic;
+  }
+  datalist {}
+  @media print {
+    body { background: #fff; padding: 0; }
+    .no-print { display: none; }
+    .sheet { border: none; padding: 0; }
+    input, textarea { background: #fff !important; border: 1px solid #999 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="no-print">
+  <button class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
+</div>
+
+<div class="sheet">
+
+  <div class="header">
+    <img src="data:image/png;base64,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" alt="Step One Group">
+    <div class="voucher-title">Voucher #
+      <input type="text" class="voucher-num" id="voucher_numero" value="155708">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label>Numero de Confirmacion</label>
+      <input type="text" id="numero_confirmacion" value="12037437AR6">
+    </div>
+    <div class="col">
+      <label>Nombre del Cliente</label>
+      <input type="text" id="nombre_cliente" value="BOSCO/HERNAN">
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col small">
+      <label>Lugar de Retiro (IATA)</label>
+      <input type="text" class="code-input" id="lugar_retiro_iata" maxlength="4"
+             list="iata-list" value="SUF" oninput="autofill('retiro')">
+      <div class="hint" id="hint_retiro"></div>
+    </div>
+    <div class="col">
+      <label>Aeropuerto / Ciudad de Retiro</label>
+      <input type="text" class="readonly" id="ciudad_retiro" readonly value="Aeropuerto di Lamezia Terme - Lamezia Terme, Italia">
+    </div>
+    <div class="col">
+      <label>Fecha y Hora de Retiro</label>
+      <input type="text" id="fecha_hora_retiro" value="13/06/2026, 11:00 Hs">
+    </div>
+    <div class="col">
+      <label>Modelo / Marca</label>
+      <input type="text" id="modelo_marca" value="Fiat Panda o similar">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col small">
+      <label>Lugar de Devolucion (IATA)</label>
+      <input type="text" class="code-input" id="lugar_devolucion_iata" maxlength="4"
+             list="iata-list" value="FCO" oninput="autofill('devolucion')">
+      <div class="hint" id="hint_devolucion"></div>
+    </div>
+    <div class="col">
+      <label>Aeropuerto / Ciudad de Devolucion</label>
+      <input type="text" class="readonly" id="ciudad_devolucion" readonly value="Aeropuerto Leonardo da Vinci-Fiumicino - Roma, Italia">
+    </div>
+    <div class="col">
+      <label>Fecha y Hora de Devolucion</label>
+      <input type="text" id="fecha_hora_devolucion" value="17/06/2026, 12:00 Hs">
+    </div>
+    <div class="col"></div>
+  </div>
+
+  <datalist id="iata-list"></datalist>
+
+  <hr>
+
+  <div class="row">
+    <div class="col">
+      <h3>Paquete / Tarifa incluida</h3>
+      <textarea id="paquete_tarifa" rows="8">SUPER SEE EUROPE ALL INC
+* Cubre el coche (LDW)
+* Cover My Liability (ALI)
+* Cover Myself (PAI)
+* Cover My Belongings (PEP)
+* Asistencia en carretera (RSN)
+* Peajes</textarea>
+    </div>
+    <div class="col">
+      <h3>Direccion Lugar de Retiro</h3>
+      <textarea class="readonly" id="direccion_retiro" rows="3" readonly>Aeropuerto di Lamezia Terme
+Lamezia Terme - Italia
+Tel: -</textarea>
+      <h3 style="margin-top:14px;">Direccion Lugar de Devolucion</h3>
+      <textarea class="readonly" id="direccion_devolucion" rows="3" readonly>Aeropuerto Leonardo da Vinci-Fiumicino
+Roma - Italia
+Tel: -</textarea>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="terms">
+    <p>El titular de la renta debera presentar su licencia de conducir local y al menos una tarjeta de credito a su nombre. No se deben presentar tarjetas de debito como garantia en ningun caso, dado que sobre estas no sera posible realizar el reintegro. Para alquileres en Europa, Asia, Africa, Australia, Nueva Zelanda y el estado de Georgia en los Estados Unidos, ademas se solicitara como obligatoria, la licencia de conducir Internacional acompanando a la local.</p>
+    <p>Existen recargos para conductores menores de 25 anos; consultar las condiciones de cada pais.</p>
+    <p>El Voucher NO INCLUYE opcionales aceptados en la oficina de inicio de la renta, los cuales seran debitados a la tarjeta de credito presentada como garantia del alquiler.</p>
+  </div>
+
+  <div class="row" style="margin-top:18px;">
+    <div class="col">
+      <label>Telefono de contacto en destino</label>
+      <input type="text" id="telefono_contacto_destino" value="+39 06 6595 1">
+    </div>
+  </div>
+
+
+
+<script>
+const AIRPORTS = {"CAN":{"airport":"Aeropuerto Internacional Baiyun","city":"Cantón (Guangzhou)","country":"China"},"PEK":{"airport":"Aeropuerto Internacional de Beijing-Capital","city":"Pekín","country":"China"},"PKX":{"airport":"Aeropuerto Internacional de Beijing-Daxing","city":"Pekín","country":"China"},"PVG":{"airport":"Aeropuerto Internacional de Shanghái-Pudong","city":"Shanghái","country":"China"},"HKG":{"airport":"Aeropuerto Internacional de Hong Kong","city":"Hong Kong","country":"China (RAE)"},"ICN":{"airport":"Aeropuerto Internacional de Incheon","city":"Seúl","country":"Corea del Sur"},"MNL":{"airport":"Aeropuerto Internacional Ninoy Aquino","city":"Manila","country":"Filipinas"},"BOM":{"airport":"Aeropuerto Internacional Chhatrapati Shivaji","city":"Bombay","country":"India"},"DEL":{"airport":"Aeropuerto Internacional Indira Gandhi","city":"Nueva Delhi","country":"India"},"DPS":{"airport":"Aeropuerto Internacional Ngurah Rai","city":"Denpasar (Bali)","country":"Indonesia"},"CGK":{"airport":"Aeropuerto Internacional Soekarno-Hatta","city":"Yakarta","country":"Indonesia"},"KIX":{"airport":"Aeropuerto Internacional de Kansai","city":"Osaka","country":"Japón"},"HND":{"airport":"Aeropuerto Internacional de Haneda","city":"Tokio","country":"Japón"},"NRT":{"airport":"Aeropuerto Internacional de Narita","city":"Tokio","country":"Japón"},"KUL":{"airport":"Aeropuerto Internacional de Kuala Lumpur","city":"Kuala Lumpur","country":"Malasia"},"SIN":{"airport":"Aeropuerto de Singapur-Changi","city":"Singapur","country":"Singapur"},"BKK":{"airport":"Aeropuerto Internacional Suvarnabhumi","city":"Bangkok","country":"Tailandia"},"DMK":{"airport":"Aeropuerto de Don Mueang","city":"Bangkok","country":"Tailandia"},"TPE":{"airport":"Aeropuerto Internacional Taiwán Taoyuan","city":"Taipéi","country":"Taiwán"},"AUA":{"airport":"Aeropuerto Internacional Reina Beatrix","city":"Oranjestad","country":"Aruba"},"NAS":{"airport":"Aeropuerto Internacional Lynden Pindling","city":"Nassau","country":"Bahamas"},"LIR":{"airport":"Aeropuerto Internacional Daniel Oduber Quirós","city":"Liberia","country":"Costa Rica"},"SJO":{"airport":"Aeropuerto Internacional Juan Santamaría","city":"San José","country":"Costa Rica"},"HAV":{"airport":"Aeropuerto Internacional José Martí","city":"La Habana","country":"Cuba"},"SAL":{"airport":"Aeropuerto Internacional de El Salvador","city":"San Salvador","country":"El Salvador"},"GUA":{"airport":"Aeropuerto Internacional La Aurora","city":"Ciudad de Guatemala","country":"Guatemala"},"MBJ":{"airport":"Aeropuerto Internacional Sangster","city":"Montego Bay","country":"Jamaica"},"CUN":{"airport":"Aeropuerto Internacional de Cancún","city":"Cancún","country":"México"},"MEX":{"airport":"Aeropuerto Internacional Benito Juárez","city":"Ciudad de México","country":"México"},"COZ":{"airport":"Aeropuerto Internacional de Cozumel","city":"Cozumel","country":"México"},"GDL":{"airport":"Aeropuerto Internacional Miguel Hidalgo","city":"Guadalajara","country":"México"},"SJD":{"airport":"Aeropuerto Internacional de Los Cabos","city":"Los Cabos","country":"México"},"MTY":{"airport":"Aeropuerto Internacional del Norte","city":"Monterrey","country":"México"},"PVR":{"airport":"Aeropuerto Internacional Lic. Gustavo Díaz Ordaz","city":"Puerto Vallarta","country":"México"},"PTY":{"airport":"Aeropuerto Internacional de Tocumen","city":"Ciudad de Panamá","country":"Panamá"},"SJU":{"airport":"Aeropuerto Internacional Luis Muñoz Marín","city":"San Juan","country":"Puerto Rico"},"PUJ":{"airport":"Aeropuerto Internacional de Punta Cana","city":"Punta Cana","country":"Rep. Dominicana"},"SDQ":{"airport":"Aeropuerto Internacional Las Américas","city":"Santo Domingo","country":"Rep. Dominicana"},"BER":{"airport":"Aeropuerto de Berlín-Brandeburgo","city":"Berlín","country":"Alemania"},"FRA":{"airport":"Aeropuerto de Fráncfort del Meno","city":"Fráncfort","country":"Alemania"},"MUC":{"airport":"Aeropuerto de Múnich","city":"Múnich","country":"Alemania"},"VIE":{"airport":"Aeropuerto de Viena-Schwechat","city":"Viena","country":"Austria"},"BRU":{"airport":"Aeropuerto de Bruselas","city":"Bruselas","country":"Bélgica"},"CPH":{"airport":"Aeropuerto de Copenhague","city":"Copenhague","country":"Dinamarca"},"BCN":{"airport":"Aeropuerto de Barcelona-El Prat","city":"Barcelona","country":"España"},"MAD":{"airport":"Aeropuerto Adolfo Suárez Madrid-Barajas","city":"Madrid","country":"España"},"AGP":{"airport":"Aeropuerto de Málaga-Costa del Sol","city":"Málaga","country":"España"},"PMI":{"airport":"Aeropuerto de Palma de Mallorca","city":"Palma de Mallorca","country":"España"},"HEL":{"airport":"Aeropuerto de Helsinki-Vantaa","city":"Helsinki","country":"Finlandia"},"NCE":{"airport":"Aeropuerto de Niza Costa Azul","city":"Niza","country":"Francia"},"CDG":{"airport":"Aeropuerto Charles de Gaulle","city":"París","country":"Francia"},"ORY":{"airport":"Aeropuerto de Orly","city":"París","country":"Francia"},"ATH":{"airport":"Aeropuerto Internacional Eleftherios Venizelos","city":"Atenas","country":"Grecia"},"BUD":{"airport":"Aeropuerto de Budapest-Ferenc Liszt","city":"Budapest","country":"Hungría"},"DUB":{"airport":"Aeropuerto de Dublín","city":"Dublín","country":"Irlanda"},"MXP":{"airport":"Aeropuerto de Milán-Malpensa","city":"Milán","country":"Italia"},"NAP":{"airport":"Aeropuerto de Nápoles","city":"Nápoles","country":"Italia"},"FCO":{"airport":"Aeropuerto Leonardo da Vinci–Fiumicino","city":"Roma","country":"Italia"},"VCE":{"airport":"Aeropuerto Marco Polo","city":"Venecia","country":"Italia"},"OSL":{"airport":"Aeropuerto de Oslo-Gardermoen","city":"Oslo","country":"Noruega"},"AMS":{"airport":"Aeropuerto de Ámsterdam-Schiphol","city":"Ámsterdam","country":"Países Bajos"},"WAW":{"airport":"Aeropuerto Chopin de Varsovia","city":"Varsovia","country":"Polonia"},"LIS":{"airport":"Aeropuerto Humberto Delgado","city":"Lisboa","country":"Portugal"},"OPO":{"airport":"Aeropuerto Francisco Sá Carneiro","city":"Oporto","country":"Portugal"},"LHR":{"airport":"Aeropuerto de Heathrow","city":"Londres","country":"Reino Unido"},"LGW":{"airport":"Aeropuerto de Gatwick","city":"Londres","country":"Reino Unido"},"STN":{"airport":"Aeropuerto de Stansted","city":"Londres","country":"Reino Unido"},"MAN":{"airport":"Aeropuerto de Manchester","city":"Manchester","country":"Reino Unido"},"PRG":{"airport":"Aeropuerto Václav Havel","city":"Praga","country":"Rep. Checa"},"SVO":{"airport":"Aeropuerto de Moscú-Sheremétievo","city":"Moscú","country":"Rusia"},"ARN":{"airport":"Aeropuerto de Estocolmo-Arlanda","city":"Estocolmo","country":"Suecia"},"GVA":{"airport":"Aeropuerto de Ginebra","city":"Ginebra","country":"Suiza"},"ZRH":{"airport":"Aeropuerto de Zúrich","city":"Zúrich","country":"Suiza"},"IST":{"airport":"Aeropuerto de Estambul","city":"Estambul","country":"Turquía"},"SAW":{"airport":"Aeropuerto Sabiha Gökçen","city":"Estambul","country":"Turquía"},"JED":{"airport":"Aeropuerto Internacional Rey Abdulaziz","city":"Jeddah","country":"Arabia Saudita"},"RUH":{"airport":"Aeropuerto Internacional Rey Khalid","city":"Riad","country":"Arabia Saudita"},"DOH":{"airport":"Aeropuerto Internacional Hamad","city":"Doha","country":"Catar"},"AUH":{"airport":"Aeropuerto Internacional de Abu Dabi","city":"Abu Dabi","country":"Emiratos Árabes Unidos"},"DXB":{"airport":"Aeropuerto Internacional de Dubái","city":"Dubái","country":"Emiratos Árabes Unidos"},"TLV":{"airport":"Aeropuerto Ben Gurión","city":"Tel Aviv","country":"Israel"},"YUL":{"airport":"Aeropuerto Internacional Pierre Elliott Trudeau","city":"Montreal","country":"Canadá"},"YYZ":{"airport":"Aeropuerto Internacional Pearson","city":"Toronto","country":"Canadá"},"YVR":{"airport":"Aeropuerto Internacional de Vancouver","city":"Vancouver","country":"Canadá"},"ATL":{"airport":"Aeropuerto Internacional Hartsfield-Jackson","city":"Atlanta","country":"Estados Unidos"},"BOS":{"airport":"Aeropuerto Internacional Logan","city":"Boston","country":"Estados Unidos"},"ORD":{"airport":"Aeropuerto Internacional O'Hare","city":"Chicago","country":"Estados Unidos"},"DFW":{"airport":"Aeropuerto Internacional de Dallas/Fort Worth","city":"Dallas","country":"Estados Unidos"},"DEN":{"airport":"Aeropuerto Internacional de Denver","city":"Denver","country":"Estados Unidos"},"IAH":{"airport":"Aeropuerto Intercontinental George Bush","city":"Houston","country":"Estados Unidos"},"LAS":{"airport":"Aeropuerto Internacional Harry Reid","city":"Las Vegas","country":"Estados Unidos"},"LAX":{"airport":"Aeropuerto Internacional de Los Ángeles","city":"Los Ángeles","country":"Estados Unidos"},"MIA":{"airport":"Aeropuerto Internacional de Miami","city":"Miami","country":"Estados Unidos"},"JFK":{"airport":"Aeropuerto Internacional John F. Kennedy","city":"Nueva York","country":"Estados Unidos"},"LGA":{"airport":"Aeropuerto LaGuardia","city":"Nueva York","country":"Estados Unidos"},"EWR":{"airport":"Aeropuerto Internacional Newark Liberty","city":"Nueva York/Newark","country":"Estados Unidos"},"MCO":{"airport":"Aeropuerto Internacional de Orlando","city":"Orlando","country":"Estados Unidos"},"PHX":{"airport":"Aeropuerto Internacional Sky Harbor","city":"Phoenix","country":"Estados Unidos"},"SFO":{"airport":"Aeropuerto Internacional de San Francisco","city":"San Francisco","country":"Estados Unidos"},"SEA":{"airport":"Aeropuerto Internacional Seattle-Tacoma","city":"Seattle","country":"Estados Unidos"},"DCA":{"airport":"Aeropuerto Nacional Ronald Reagan","city":"Washington D.C.","country":"Estados Unidos"},"IAD":{"airport":"Aeropuerto Internacional Dulles","city":"Washington D.C.","country":"Estados Unidos"},"BNE":{"airport":"Aeropuerto de Brisbane","city":"Brisbane","country":"Australia"},"MEL":{"airport":"Aeropuerto de Melbourne","city":"Melbourne","country":"Australia"},"PER":{"airport":"Aeropuerto de Perth","city":"Perth","country":"Australia"},"SYD":{"airport":"Aeropuerto Kingsford Smith","city":"Sídney","country":"Australia"},"AKL":{"airport":"Aeropuerto de Auckland","city":"Auckland","country":"Nueva Zelanda"},"BRC":{"airport":"Aeropuerto Internacional Teniente Luis Candelaria","city":"Bariloche","country":"Argentina"},"EZE":{"airport":"Aeropuerto Internacional Ministro Pistarini (Ezeiza)","city":"Buenos Aires","country":"Argentina"},"AEP":{"airport":"Aeroparque Jorge Newbery","city":"Buenos Aires","country":"Argentina"},"COR":{"airport":"Aeropuerto Ingeniero Aviador Ambrosio Taravella","city":"Córdoba","country":"Argentina"},"FTE":{"airport":"Aeropuerto Internacional El Calafate","city":"El Calafate","country":"Argentina"},"MDZ":{"airport":"Aeropuerto Internacional El Plumerillo","city":"Mendoza","country":"Argentina"},"NQN":{"airport":"Aeropuerto Presidente Perón","city":"Neuquén","country":"Argentina"},"IGR":{"airport":"Aeropuerto Internacional Cataratas del Iguazú","city":"Puerto Iguazú","country":"Argentina"},"ROS":{"airport":"Aeropuerto Internacional Rosario","city":"Rosario","country":"Argentina"},"SLA":{"airport":"Aeropuerto Martín Miguel de Güemes","city":"Salta","country":"Argentina"},"REL":{"airport":"Aeropuerto Almirante Marcos A. Zar","city":"Trelew","country":"Argentina"},"USH":{"airport":"Aeropuerto Internacional Malvinas Argentinas","city":"Ushuaia","country":"Argentina"},"LPB":{"airport":"Aeropuerto Internacional El Alto","city":"La Paz","country":"Bolivia"},"CNF":{"airport":"Aeropuerto Internacional Tancredo Neves","city":"Belo Horizonte","country":"Brasil"},"BEL":{"airport":"Aeropuerto Internacional Val de Cans","city":"Belém","country":"Brasil"},"BSB":{"airport":"Aeropuerto Internacional de Brasilia","city":"Brasilia","country":"Brasil"},"CWB":{"airport":"Aeropuerto Internacional Afonso Pena","city":"Curitiba","country":"Brasil"},"FLN":{"airport":"Aeropuerto Internacional Hercílio Luz","city":"Florianópolis","country":"Brasil"},"FOR":{"airport":"Aeropuerto Internacional Pinto Martins","city":"Fortaleza","country":"Brasil"},"MCZ":{"airport":"Aeropuerto Internacional Zumbi dos Palmares","city":"Maceió","country":"Brasil"},"MAO":{"airport":"Aeropuerto Internacional Eduardo Gomes","city":"Manaos","country":"Brasil"},"NAT":{"airport":"Aeropuerto Internacional Governador Aluízio Alves","city":"Natal","country":"Brasil"},"POA":{"airport":"Aeropuerto Internacional Salgado Filho","city":"Porto Alegre","country":"Brasil"},"REC":{"airport":"Aeropuerto Internacional dos Guararapes","city":"Recife","country":"Brasil"},"GIG":{"airport":"Aeropuerto Internacional Galeão","city":"Río de Janeiro","country":"Brasil"},"SDU":{"airport":"Aeropuerto Santos Dumont","city":"Río de Janeiro","country":"Brasil"},"SSA":{"airport":"Aeropuerto Internacional de Salvador","city":"Salvador de Bahía","country":"Brasil"},"GRU":{"airport":"Aeropuerto Internacional de São Paulo–Guarulhos","city":"São Paulo","country":"Brasil"},"CGH":{"airport":"Aeropuerto de São Paulo–Congonhas","city":"São Paulo","country":"Brasil"},"SCL":{"airport":"Aeropuerto Internacional Arturo Merino Benítez","city":"Santiago","country":"Chile"},"BOG":{"airport":"Aeropuerto Internacional El Dorado","city":"Bogotá","country":"Colombia"},"CTG":{"airport":"Aeropuerto Internacional Rafael Núñez","city":"Cartagena","country":"Colombia"},"MDE":{"airport":"Aeropuerto Internacional José María Córdova","city":"Medellín","country":"Colombia"},"GYE":{"airport":"Aeropuerto Internacional José Joaquín de Olmedo","city":"Guayaquil","country":"Ecuador"},"UIO":{"airport":"Aeropuerto Internacional Mariscal Sucre","city":"Quito","country":"Ecuador"},"ASU":{"airport":"Aeropuerto Internacional Silvio Pettirossi","city":"Asunción","country":"Paraguay"},"CUZ":{"airport":"Aeropuerto Internacional Alejandro Velasco Astete","city":"Cusco","country":"Perú"},"LIM":{"airport":"Aeropuerto Internacional Jorge Chávez","city":"Lima","country":"Perú"},"MVD":{"airport":"Aeropuerto Internacional de Carrasco","city":"Montevideo","country":"Uruguay"},"CCS":{"airport":"Aeropuerto Internacional Simón Bolívar","city":"Caracas","country":"Venezuela"},"CAI":{"airport":"Aeropuerto Internacional de El Cairo","city":"El Cairo","country":"Egipto"},"ADD":{"airport":"Aeropuerto Internacional Bole","city":"Addis Abeba","country":"Etiopía"},"NBO":{"airport":"Aeropuerto Internacional Jomo Kenyatta","city":"Nairobi","country":"Kenia"},"CMN":{"airport":"Aeropuerto Mohammed V","city":"Casablanca","country":"Marruecos"},"LOS":{"airport":"Aeropuerto Internacional Murtala Muhammed","city":"Lagos","country":"Nigeria"},"CPT":{"airport":"Aeropuerto Internacional de Ciudad del Cabo","city":"Ciudad del Cabo","country":"Sudáfrica"},"JNB":{"airport":"Aeropuerto Internacional O.R. Tambo","city":"Johannesburgo","country":"Sudáfrica"}};
+
+// Populate the IATA datalist for typeahead suggestions
+(function initDatalist(){
+  const dl = document.getElementById('iata-list');
+  Object.keys(AIRPORTS).sort().forEach(code => {
+    const opt = document.createElement('option');
+    const a = AIRPORTS[code];
+    opt.value = code;
+    opt.label = a.airport + ' - ' + a.city + ', ' + a.country;
+    dl.appendChild(opt);
+  });
+})();
+
+function autofill(which) {
+  const codeInput = document.getElementById('lugar_' + which + '_iata');
+  const cityField = document.getElementById('ciudad_' + which);
+  const addrField = document.getElementById('direccion_' + which);
+  const hint = document.getElementById('hint_' + which);
+
+  const code = codeInput.value.trim().toUpperCase();
+  codeInput.value = code;
+
+  if (!code) {
+    cityField.value = '';
+    addrField.value = '';
+    hint.textContent = '';
+    hint.className = 'hint';
+    return;
+  }
+
+  const a = AIRPORTS[code];
+  if (a) {
+    cityField.value = a.airport + ' - ' + a.city + ', ' + a.country;
+    addrField.value = a.airport + '\n' + a.city + ' - ' + a.country + '\nTel: -';
+    hint.textContent = 'Codigo IATA reconocido';
+    hint.className = 'hint ok';
+  } else {
+    cityField.value = '';
+    addrField.value = '';
+    if (code.length >= 3) {
+      hint.textContent = 'Codigo IATA no reconocido en la base (154 aeropuertos)';
+      hint.className = 'hint err';
+    } else {
+      hint.textContent = '';
+      hint.className = 'hint';
+    }
+  }
+}
+
+// Run once on load in case values were pre-filled or autofilled by the browser
+window.addEventListener('DOMContentLoaded', () => {
+  autofill('retiro');
+  autofill('devolucion');
+});
+</script>
+
+</body>
+</html>
