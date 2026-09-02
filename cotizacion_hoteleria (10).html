@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cotización de Hotelería — Step One Group</title>
+<style>
+  :root{
+    --blue:#2D86C3;
+    --blue-dark:#1B4F73;
+    --navy:#0F2E44;
+    --ink:#1a2530;
+    --muted:#5b6b78;
+    --gray-bg:#F4F6F8;
+    --border:#DDE3E8;
+    --paper:#FFFFFF;
+    --danger:#C0392B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', Arial, Helvetica, sans-serif;
+    background:var(--gray-bg);
+    color:var(--ink);
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  .app{display:flex; justify-content:center; padding:28px 16px 80px;}
+  .sheet{
+    background:var(--paper);
+    width:100%;
+    max-width:800px;
+    box-shadow:0 4px 24px rgba(15,46,68,0.12);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .toolbar{max-width:800px; margin:0 auto 14px; display:flex; gap:10px; justify-content:flex-end;}
+  .btn{border:none; border-radius:5px; padding:10px 18px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit;}
+  .btn-primary{background:var(--blue); color:#fff;}
+  .btn-primary:hover{background:var(--blue-dark);}
+  .btn-ghost{background:#fff; color:var(--navy); border:1px solid var(--border);}
+  .btn-ghost:hover{background:var(--gray-bg);}
+  .btn-add{background:transparent; color:var(--blue); border:1px dashed var(--blue); padding:6px 12px; font-size:12.5px; border-radius:5px; cursor:pointer; font-family:inherit; font-weight:600;}
+  .btn-remove{background:transparent; border:none; color:var(--danger); cursor:pointer; font-size:16px; line-height:1; padding:4px 6px;}
+
+  .head{background:var(--navy); color:#fff; padding:28px 34px; display:flex; justify-content:space-between; align-items:flex-start; gap:20px;}
+  .head-left{display:flex; gap:16px; align-items:center;}
+  .head-left img{height:46px; display:block; background:#fff; border-radius:6px; padding:4px 8px;}
+  .agency-info{font-size:12px; line-height:1.6; color:#CFE0EC;}
+  .agency-info strong{display:block; font-size:15px; color:#fff; margin-bottom:2px; letter-spacing:.3px;}
+  .head-right{text-align:right;}
+  .doc-title{font-size:13px; text-transform:uppercase; letter-spacing:1.5px; color:var(--blue); font-weight:700; margin-bottom:8px;}
+  .doc-meta{font-size:12px; color:#CFE0EC; display:flex; flex-direction:column; gap:4px; align-items:flex-end;}
+  .doc-meta .row{display:flex; align-items:center; gap:6px;}
+  .doc-meta label{color:#8FAFC4;}
+  .doc-meta input, .doc-meta select{background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.25); color:#fff; border-radius:4px; padding:4px 6px; font-size:12px; font-family:inherit; text-align:right;}
+  .doc-meta input::placeholder{color:#8FAFC4;}
+
+  .section{padding:22px 34px; border-bottom:1px solid var(--border);}
+  .section:last-of-type{border-bottom:none;}
+  .section h2{font-size:12.5px; text-transform:uppercase; letter-spacing:1px; color:var(--blue-dark); margin:0 0 14px; font-weight:700; display:flex; align-items:center; gap:8px;}
+  .section h2::before{content:""; width:4px; height:14px; background:var(--blue); border-radius:2px; display:inline-block;}
+  .hotel-option > h2{justify-content:space-between;}
+  .hotel-option > h2::before{content:none;}
+  .hotel-option > h2 .h2-label{display:flex; align-items:center; gap:8px;}
+  .hotel-option > h2 .h2-label::before{content:""; width:4px; height:14px; background:var(--blue); border-radius:2px; display:inline-block;}
+  .field-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px 18px;}
+  .field{display:flex; flex-direction:column; gap:4px;}
+  .field.span2{grid-column:span 2;}
+  .field label{font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); font-weight:600;}
+  .field input, .field select, .field textarea{border:1px solid var(--border); border-radius:4px; padding:7px 9px; font-size:13.5px; font-family:inherit; color:var(--ink); background:#fff; width:100%;}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--blue); outline-offset:0;}
+
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  thead th{text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); padding:6px 8px; border-bottom:2px solid var(--border); font-weight:700;}
+  tbody td{padding:5px 6px; border-bottom:1px solid var(--border); vertical-align:middle;}
+  td input, td select{border:1px solid transparent; background:transparent; width:100%; padding:6px 6px; font-size:13px; font-family:inherit; border-radius:4px;}
+  td input:hover, td select:hover{border-color:var(--border);}
+  td input:focus, td select:focus{outline:none; border-color:var(--blue); background:#F7FBFE;}
+  td.num input{text-align:right;}
+  .col-remove{width:34px; text-align:center;}
+  .col-total{text-align:right; font-weight:600; white-space:nowrap;}
+  .table-actions{margin-top:10px;}
+
+  .totals{display:flex; justify-content:flex-end; margin-top:16px;}
+  .totals-box{min-width:260px; background:var(--gray-bg); border-radius:6px; padding:14px 18px;}
+  .totals-row{display:flex; justify-content:space-between; gap:14px; font-size:14px; color:var(--muted); padding:3px 0;}
+  .totals-row.grand{border-top:1px solid var(--border); margin-top:6px; padding-top:10px; font-size:19px; font-weight:700; color:var(--navy);}
+
+  .conditions textarea{min-height:90px; resize:none; overflow:hidden; font-size:12px; line-height:1.5; color:var(--muted); width:100%; box-sizing:border-box; border:1px solid var(--border); border-radius:4px; padding:10px 12px; font-family:inherit;}
+
+  .foot{background:var(--gray-bg); padding:18px 34px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--muted);}
+  .foot strong{color:var(--navy);}
+
+  .no-print{}
+  @media print{
+    input::placeholder, textarea::placeholder{ color:transparent !important; }
+    body{background:#fff;}
+    .app{padding:0;}
+    .toolbar{display:none;}
+    .sheet{box-shadow:none; border-radius:0; max-width:100%;}
+    .no-print{display:none !important;}
+    td input, td select, .field input, .field select, .doc-meta input, .doc-meta select, .conditions textarea, [data-role="conditions"]{border-color:transparent !important; background:transparent !important; padding-left:0 !important; padding-right:0 !important;}
+    @page{ size:A4; margin:14mm 12mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div style="width:100%; max-width:800px;">
+    <div class="toolbar no-print">
+      <button class="btn btn-ghost" onclick="resetForm()">Nueva cotización</button>
+      <button class="btn btn-primary" onclick="window.print()">Descargar / Imprimir PDF</button>
+    </div>
+
+    <div class="sheet" id="sheet">
+      <div class="head">
+        <div class="head-left">
+          <img src="data:image/png;base64,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" alt="Step One Group">
+          <div class="agency-info">
+            <strong>Step One Group</strong>
+            +54 9 11 5626-9027<br>
+            martin@steponegroup.com.ar
+          </div>
+        </div>
+        <div class="head-right">
+          <div class="doc-title">Cotización de Hotelería</div>
+          <div class="doc-meta">
+            <div class="row"><label>Fecha</label><input id="quoteDate" type="date"></div>
+            <div class="row"><label>Moneda</label>
+              <select id="currency" onchange="render()">
+                <option value="USD">USD</option>
+                <option value="ARS">ARS</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Cliente</h2>
+        <div class="field-grid">
+          <div class="field span2">
+            <label>Nombre del cliente</label>
+            <input type="text" placeholder="Nombre y apellido / Empresa">
+          </div>
+          <div class="field">
+            <label>Cantidad de huéspedes</label>
+            <input type="number" min="1" placeholder="2">
+          </div>
+        </div>
+      </div>
+
+      <div id="hotelOptionsContainer"></div>
+
+      <div class="section no-print" style="border-bottom:none; padding-top:0;">
+        <button class="btn-add" onclick="addHotelOption()">+ Agregar opción de hotel</button>
+      </div>
+
+      <div class="foot">
+        <span><strong>Step One Group</strong> · +54 9 11 5626-9027 · martin@steponegroup.com.ar</span>
+        <span>Gracias por su confianza</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<datalist id="airportList"></datalist>
+
+<script>
+  const AIRPORTS = {"CAN":{"ciudad":"Cantón (Guangzhou)","pais":"China"},"PEK":{"ciudad":"Pekín","pais":"China"},"PKX":{"ciudad":"Pekín","pais":"China"},"PVG":{"ciudad":"Shanghái","pais":"China"},"HKG":{"ciudad":"Hong Kong","pais":"China (RAE)"},"ICN":{"ciudad":"Seúl","pais":"Corea del Sur"},"MNL":{"ciudad":"Manila","pais":"Filipinas"},"BOM":{"ciudad":"Bombay","pais":"India"},"DEL":{"ciudad":"Nueva Delhi","pais":"India"},"DPS":{"ciudad":"Denpasar (Bali)","pais":"Indonesia"},"CGK":{"ciudad":"Yakarta","pais":"Indonesia"},"KIX":{"ciudad":"Osaka","pais":"Japón"},"HND":{"ciudad":"Tokio","pais":"Japón"},"NRT":{"ciudad":"Tokio","pais":"Japón"},"KUL":{"ciudad":"Kuala Lumpur","pais":"Malasia"},"SIN":{"ciudad":"Singapur","pais":"Singapur"},"BKK":{"ciudad":"Bangkok","pais":"Tailandia"},"DMK":{"ciudad":"Bangkok","pais":"Tailandia"},"TPE":{"ciudad":"Taipéi","pais":"Taiwán"},"AUA":{"ciudad":"Oranjestad","pais":"Aruba"},"NAS":{"ciudad":"Nassau","pais":"Bahamas"},"LIR":{"ciudad":"Liberia","pais":"Costa Rica"},"SJO":{"ciudad":"San José","pais":"Costa Rica"},"HAV":{"ciudad":"La Habana","pais":"Cuba"},"SAL":{"ciudad":"San Salvador","pais":"El Salvador"},"GUA":{"ciudad":"Ciudad de Guatemala","pais":"Guatemala"},"MBJ":{"ciudad":"Montego Bay","pais":"Jamaica"},"CUN":{"ciudad":"Cancún","pais":"México"},"MEX":{"ciudad":"Ciudad de México","pais":"México"},"COZ":{"ciudad":"Cozumel","pais":"México"},"GDL":{"ciudad":"Guadalajara","pais":"México"},"SJD":{"ciudad":"Los Cabos","pais":"México"},"MTY":{"ciudad":"Monterrey","pais":"México"},"PVR":{"ciudad":"Puerto Vallarta","pais":"México"},"PTY":{"ciudad":"Ciudad de Panamá","pais":"Panamá"},"SJU":{"ciudad":"San Juan","pais":"Puerto Rico"},"PUJ":{"ciudad":"Punta Cana","pais":"Rep. Dominicana"},"SDQ":{"ciudad":"Santo Domingo","pais":"Rep. Dominicana"},"BER":{"ciudad":"Berlín","pais":"Alemania"},"FRA":{"ciudad":"Fráncfort","pais":"Alemania"},"MUC":{"ciudad":"Múnich","pais":"Alemania"},"VIE":{"ciudad":"Viena","pais":"Austria"},"BRU":{"ciudad":"Bruselas","pais":"Bélgica"},"CPH":{"ciudad":"Copenhague","pais":"Dinamarca"},"BCN":{"ciudad":"Barcelona","pais":"España"},"MAD":{"ciudad":"Madrid","pais":"España"},"AGP":{"ciudad":"Málaga","pais":"España"},"PMI":{"ciudad":"Palma de Mallorca","pais":"España"},"HEL":{"ciudad":"Helsinki","pais":"Finlandia"},"NCE":{"ciudad":"Niza","pais":"Francia"},"CDG":{"ciudad":"París","pais":"Francia"},"ORY":{"ciudad":"París","pais":"Francia"},"ATH":{"ciudad":"Atenas","pais":"Grecia"},"BUD":{"ciudad":"Budapest","pais":"Hungría"},"DUB":{"ciudad":"Dublín","pais":"Irlanda"},"MXP":{"ciudad":"Milán","pais":"Italia"},"NAP":{"ciudad":"Nápoles","pais":"Italia"},"FCO":{"ciudad":"Roma","pais":"Italia"},"VCE":{"ciudad":"Venecia","pais":"Italia"},"OSL":{"ciudad":"Oslo","pais":"Noruega"},"AMS":{"ciudad":"Ámsterdam","pais":"Países Bajos"},"WAW":{"ciudad":"Varsovia","pais":"Polonia"},"LIS":{"ciudad":"Lisboa","pais":"Portugal"},"OPO":{"ciudad":"Oporto","pais":"Portugal"},"LHR":{"ciudad":"Londres","pais":"Reino Unido"},"LGW":{"ciudad":"Londres","pais":"Reino Unido"},"STN":{"ciudad":"Londres","pais":"Reino Unido"},"MAN":{"ciudad":"Manchester","pais":"Reino Unido"},"PRG":{"ciudad":"Praga","pais":"Rep. Checa"},"SVO":{"ciudad":"Moscú","pais":"Rusia"},"ARN":{"ciudad":"Estocolmo","pais":"Suecia"},"GVA":{"ciudad":"Ginebra","pais":"Suiza"},"ZRH":{"ciudad":"Zúrich","pais":"Suiza"},"IST":{"ciudad":"Estambul","pais":"Turquía"},"SAW":{"ciudad":"Estambul","pais":"Turquía"},"JED":{"ciudad":"Jeddah","pais":"Arabia Saudita"},"RUH":{"ciudad":"Riad","pais":"Arabia Saudita"},"DOH":{"ciudad":"Doha","pais":"Catar"},"AUH":{"ciudad":"Abu Dabi","pais":"Emiratos Árabes Unidos"},"DXB":{"ciudad":"Dubái","pais":"Emiratos Árabes Unidos"},"TLV":{"ciudad":"Tel Aviv","pais":"Israel"},"YUL":{"ciudad":"Montreal","pais":"Canadá"},"YYZ":{"ciudad":"Toronto","pais":"Canadá"},"YVR":{"ciudad":"Vancouver","pais":"Canadá"},"ATL":{"ciudad":"Atlanta","pais":"Estados Unidos"},"BOS":{"ciudad":"Boston","pais":"Estados Unidos"},"ORD":{"ciudad":"Chicago","pais":"Estados Unidos"},"DFW":{"ciudad":"Dallas","pais":"Estados Unidos"},"DEN":{"ciudad":"Denver","pais":"Estados Unidos"},"IAH":{"ciudad":"Houston","pais":"Estados Unidos"},"LAS":{"ciudad":"Las Vegas","pais":"Estados Unidos"},"LAX":{"ciudad":"Los Ángeles","pais":"Estados Unidos"},"MIA":{"ciudad":"Miami","pais":"Estados Unidos"},"JFK":{"ciudad":"Nueva York","pais":"Estados Unidos"},"LGA":{"ciudad":"Nueva York","pais":"Estados Unidos"},"EWR":{"ciudad":"Nueva York/Newark","pais":"Estados Unidos"},"MCO":{"ciudad":"Orlando","pais":"Estados Unidos"},"PHX":{"ciudad":"Phoenix","pais":"Estados Unidos"},"SFO":{"ciudad":"San Francisco","pais":"Estados Unidos"},"SEA":{"ciudad":"Seattle","pais":"Estados Unidos"},"DCA":{"ciudad":"Washington D.C.","pais":"Estados Unidos"},"IAD":{"ciudad":"Washington D.C.","pais":"Estados Unidos"},"BNE":{"ciudad":"Brisbane","pais":"Australia"},"MEL":{"ciudad":"Melbourne","pais":"Australia"},"PER":{"ciudad":"Perth","pais":"Australia"},"SYD":{"ciudad":"Sídney","pais":"Australia"},"AKL":{"ciudad":"Auckland","pais":"Nueva Zelanda"},"BRC":{"ciudad":"Bariloche","pais":"Argentina"},"EZE":{"ciudad":"Buenos Aires","pais":"Argentina"},"AEP":{"ciudad":"Buenos Aires","pais":"Argentina"},"COR":{"ciudad":"Córdoba","pais":"Argentina"},"FTE":{"ciudad":"El Calafate","pais":"Argentina"},"MDZ":{"ciudad":"Mendoza","pais":"Argentina"},"NQN":{"ciudad":"Neuquén","pais":"Argentina"},"IGR":{"ciudad":"Puerto Iguazú","pais":"Argentina"},"ROS":{"ciudad":"Rosario","pais":"Argentina"},"SLA":{"ciudad":"Salta","pais":"Argentina"},"REL":{"ciudad":"Trelew","pais":"Argentina"},"USH":{"ciudad":"Ushuaia","pais":"Argentina"},"LPB":{"ciudad":"La Paz","pais":"Bolivia"},"CNF":{"ciudad":"Belo Horizonte","pais":"Brasil"},"BEL":{"ciudad":"Belém","pais":"Brasil"},"BSB":{"ciudad":"Brasilia","pais":"Brasil"},"CWB":{"ciudad":"Curitiba","pais":"Brasil"},"FLN":{"ciudad":"Florianópolis","pais":"Brasil"},"FOR":{"ciudad":"Fortaleza","pais":"Brasil"},"MCZ":{"ciudad":"Maceió","pais":"Brasil"},"MAO":{"ciudad":"Manaos","pais":"Brasil"},"NAT":{"ciudad":"Natal","pais":"Brasil"},"POA":{"ciudad":"Porto Alegre","pais":"Brasil"},"REC":{"ciudad":"Recife","pais":"Brasil"},"GIG":{"ciudad":"Río de Janeiro","pais":"Brasil"},"SDU":{"ciudad":"Río de Janeiro","pais":"Brasil"},"SSA":{"ciudad":"Salvador de Bahía","pais":"Brasil"},"GRU":{"ciudad":"São Paulo","pais":"Brasil"},"CGH":{"ciudad":"São Paulo","pais":"Brasil"},"SCL":{"ciudad":"Santiago","pais":"Chile"},"BOG":{"ciudad":"Bogotá","pais":"Colombia"},"CTG":{"ciudad":"Cartagena","pais":"Colombia"},"MDE":{"ciudad":"Medellín","pais":"Colombia"},"GYE":{"ciudad":"Guayaquil","pais":"Ecuador"},"UIO":{"ciudad":"Quito","pais":"Ecuador"},"ASU":{"ciudad":"Asunción","pais":"Paraguay"},"CUZ":{"ciudad":"Cusco","pais":"Perú"},"LIM":{"ciudad":"Lima","pais":"Perú"},"MVD":{"ciudad":"Montevideo","pais":"Uruguay"},"CCS":{"ciudad":"Caracas","pais":"Venezuela"},"CAI":{"ciudad":"El Cairo","pais":"Egipto"},"ADD":{"ciudad":"Addis Abeba","pais":"Etiopía"},"NBO":{"ciudad":"Nairobi","pais":"Kenia"},"CMN":{"ciudad":"Casablanca","pais":"Marruecos"},"LOS":{"ciudad":"Lagos","pais":"Nigeria"},"CPT":{"ciudad":"Ciudad del Cabo","pais":"Sudáfrica"},"JNB":{"ciudad":"Johannesburgo","pais":"Sudáfrica"}};
+
+  (function(){
+    const dl = document.getElementById('airportList');
+    Object.keys(AIRPORTS).sort().forEach(code=>{
+      const a = AIRPORTS[code];
+      const opt = document.createElement('option');
+      opt.value = code + ' - ' + a.ciudad + ', ' + a.pais;
+      dl.appendChild(opt);
+    });
+  })();
+
+  function autoAirport(input, isBlur){
+    const raw = input.value.trim();
+    if(!raw) return;
+    const codeMatch = raw.toUpperCase().match(/^([A-Z]{3})\b/);
+    if(!codeMatch) return;
+    const code = codeMatch[1];
+    const info = AIRPORTS[code];
+    if(!info) return;
+    const formatted = code + ' - ' + info.ciudad + ', ' + info.pais;
+    if(isBlur || raw.toUpperCase() === code){
+      input.value = formatted;
+    }
+  }
+
+  function autoResizeTextarea(ta){
+    if(!ta) return;
+    ta.style.height = 'auto';
+    ta.style.height = (ta.scrollHeight + 2) + 'px';
+  }
+
+  function toggleNR(id){
+    const opt = document.getElementById('hotelOpt' + id);
+    const checked = opt.querySelector('[data-role="noReembolsable"]').checked;
+    opt.querySelector('[data-role="nrPrintBox"]').style.display = checked ? 'block' : 'none';
+  }
+
+  function todayLocal(){
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    return y+'-'+m+'-'+day;
+  }
+
+  let roomCount = 0;
+  let hotelOptCount = 0;
+
+  function fmt(n){
+    n = isNaN(n) ? 0 : n;
+    return n.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  const CATEGORIA_OPTS = ['', '★', '★★', '★★★', '★★★★', '★★★★★'];
+  const REGIMEN_OPTS = ['', 'Solo alojamiento', 'Con desayuno', 'Media pensión', 'Pensión completa', 'All inclusive'];
+
+  function addHotelOption(data){
+    hotelOptCount++;
+    const id = hotelOptCount;
+    const d = data || {};
+    const div = document.createElement('div');
+    div.className = 'section hotel-option';
+    div.id = 'hotelOpt' + id;
+    div.innerHTML = `
+      <h2>
+        <span class="h2-label opt-label">Opción</span>
+        <button class="btn-remove no-print" onclick="removeHotelOption(${id})" title="Quitar esta opción">×</button>
+      </h2>
+      <div class="field-grid">
+        <div class="field span2">
+          <label>Hotel</label>
+          <input type="text" placeholder="Nombre del hotel" data-role="hotelName" value="${d.hotelName||''}">
+        </div>
+        <div class="field">
+          <label>Destino / Ciudad</label>
+          <input type="text" placeholder="Código IATA, ej: VIE" list="airportList" data-role="destino" oninput="autoAirport(this)" onblur="autoAirport(this,true)" style="text-transform:uppercase;" value="${d.destino||''}">
+        </div>
+        <div class="field">
+          <label>Categoría</label>
+          <select data-role="categoria">
+            ${CATEGORIA_OPTS.map(o => `<option${o===''?' value=""':''}${o===(d.categoria||'')?' selected':''}>${o===''?'Seleccionar':o}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>Régimen</label>
+          <select data-role="regimen">
+            ${REGIMEN_OPTS.map(o => `<option${o===''?' value=""':''}${o===(d.regimen||'')?' selected':''}>${o===''?'Seleccionar':o}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>Check-in</label>
+          <input type="date" data-role="checkin" oninput="calcNights(${id})" value="${d.checkin||''}">
+        </div>
+        <div class="field">
+          <label>Check-out</label>
+          <input type="date" data-role="checkout" oninput="calcNights(${id})" value="${d.checkout||''}">
+        </div>
+        <div class="field">
+          <label>Cantidad de noches</label>
+          <input type="number" min="1" data-role="nights" placeholder="0" value="${d.nights||''}">
+        </div>
+      </div>
+
+      <table style="margin-top:16px;">
+        <thead>
+          <tr>
+            <th style="width:26%">Tipo de habitación</th>
+            <th style="width:14%">Pax</th>
+            <th style="width:14%">Noches</th>
+            <th style="width:20%">Tarifa / noche</th>
+            <th style="width:20%" class="col-total">Subtotal</th>
+            <th class="col-remove no-print"></th>
+          </tr>
+        </thead>
+        <tbody data-role="roomsBody"></tbody>
+      </table>
+      <div class="table-actions no-print">
+        <button class="btn-add" onclick="addRoomRow(${id})">+ Agregar habitación</button>
+      </div>
+
+      <div class="totals">
+        <div class="totals-box">
+          <div class="totals-row grand"><span data-role="optLabel">Total</span><span data-role="optTotal">USD 0,00</span></div>
+        </div>
+      </div>
+
+      <div class="no-print" style="margin-top:10px;">
+        <label style="display:inline-flex; align-items:center; gap:5px; font-size:11px; color:#8a5a00; cursor:pointer;">
+          <input type="checkbox" data-role="noReembolsable" onchange="toggleNR(${id})" ${d.noReembolsable?'checked':''}> No reembolsable
+        </label>
+      </div>
+      <div data-role="nrPrintBox" style="display:${d.noReembolsable?'block':'none'}; margin-top:10px; font-size:11px; color:#8a5a00; font-weight:700;">⚠ Tarifa no reembolsable</div>
+
+      <div style="margin-top:14px; border-top:1px solid var(--border); padding-top:14px;">
+        <label style="font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); font-weight:600; display:block; margin-bottom:6px;">Políticas y condiciones de esta opción</label>
+        <textarea data-role="conditions" oninput="autoResizeTextarea(this)" style="width:100%; min-height:60px; border:1px solid var(--border); border-radius:4px; padding:8px 10px; font-size:11px; line-height:1.4; color:var(--muted); font-family:inherit; box-sizing:border-box; resize:none; overflow:hidden;">${d.conditions || 'Tarifas dinámicas sujetas a disponibilidad y a modificación sin previo aviso hasta la confirmación de la reserva.\nFormas de pago los valores están expresados en la moneda indicada y no incluyen gastos bancarios ni de transferencia, salvo que se indique lo contrario.\nCambios y cancelaciones sujetos a la política de la tarifa reservada.'}</textarea>
+      </div>
+    `;
+    document.getElementById('hotelOptionsContainer').appendChild(div);
+    autoResizeTextarea(div.querySelector('[data-role="conditions"]'));
+    addRoomRow(id);
+    renderLabels();
+    render();
+    return id;
+  }
+
+  function removeHotelOption(id){
+    const el = document.getElementById('hotelOpt' + id);
+    if(el) el.remove();
+    renderLabels();
+    render();
+  }
+
+  function renderLabels(){
+    const opts = document.querySelectorAll('.hotel-option');
+    const letters = 'ABCDEFGHIJ';
+    opts.forEach((opt, idx) => {
+      const label = letters[idx] || (idx + 1);
+      opt.querySelector('.opt-label').textContent = 'Opción ' + label;
+      const totalLabel = opt.querySelector('[data-role="optLabel"]');
+      if(totalLabel) totalLabel.textContent = 'Total Opción ' + label;
+    });
+    document.querySelectorAll('.hotel-option .btn-remove').forEach(btn => {
+      btn.style.display = opts.length > 1 ? '' : 'none';
+    });
+  }
+
+  function calcNights(optId){
+    const opt = document.getElementById('hotelOpt' + optId);
+    const inD = opt.querySelector('[data-role="checkin"]').value;
+    const outD = opt.querySelector('[data-role="checkout"]').value;
+    if(inD && outD){
+      const d1 = new Date(inD), d2 = new Date(outD);
+      const diff = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+      if(diff > 0) opt.querySelector('[data-role="nights"]').value = diff;
+    }
+  }
+
+  function addRoomRow(optId, data){
+    const d = data || {};
+    const body = document.querySelector('#hotelOpt' + optId + ' [data-role="roomsBody"]');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" placeholder="Doble Superior" data-role="type" value="${d.type||''}"></td>
+      <td class="num"><input type="number" min="1" placeholder="2" data-role="pax" value="${d.pax||''}"></td>
+      <td class="num"><input type="number" min="1" placeholder="0" data-role="nights" oninput="render()" value="${d.nights||''}"></td>
+      <td class="num"><input type="number" min="0" step="0.01" placeholder="0.00" data-role="rate" oninput="render()" value="${d.rate!=null?d.rate:''}"></td>
+      <td class="col-total" data-role="rowtotal">0,00</td>
+      <td class="col-remove no-print"><button class="btn-remove" onclick="this.closest('tr').remove(); render();">×</button></td>
+    `;
+    body.appendChild(tr);
+    render();
+  }
+
+  function render(){
+    const cur = document.getElementById('currency').value;
+    document.querySelectorAll('.hotel-option').forEach(opt => {
+      let total = 0;
+      opt.querySelectorAll('[data-role="roomsBody"] tr').forEach(tr => {
+        const nights = parseFloat(tr.querySelector('[data-role="nights"]').value) || 0;
+        const rate = parseFloat(tr.querySelector('[data-role="rate"]').value) || 0;
+        const sub = nights * rate;
+        tr.querySelector('[data-role="rowtotal"]').textContent = fmt(sub);
+        total += sub;
+      });
+      const totalEl = opt.querySelector('[data-role="optTotal"]');
+      if(totalEl) totalEl.textContent = cur + ' ' + fmt(total);
+    });
+  }
+
+  function resetForm(){
+    if(!confirm('¿Vaciar todos los campos y empezar una cotización nueva?')) return;
+    document.getElementById('hotelOptionsContainer').innerHTML = '';
+    roomCount = 0;
+    hotelOptCount = 0;
+    document.querySelectorAll('.field input, .field select').forEach(el=>{ if(el.tagName==='SELECT'){el.selectedIndex=0;} else {el.value='';} });
+    document.getElementById('quoteDate').value = todayLocal();
+    addHotelOption();
+    render();
+  }
+
+  document.getElementById('quoteDate').value = todayLocal();
+  addHotelOption();
+  render();
+</script>
+
+</body>
+</html>
